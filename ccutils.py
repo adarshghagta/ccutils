@@ -75,10 +75,10 @@ def process_page_links(page):
     }
 
 
-# In[266]:
+# In[341]:
 
 
-def download_page_data(pages,num_jobs):
+def get_documents(pages,num_jobs):
     with mp.Pool(num_jobs) as pool:
         responses = pool.map(process_page_links,pages)
     return responses
@@ -94,12 +94,12 @@ def unzip_pages(responses):
     return output
 
 
-# In[330]:
+# In[346]:
 
 
-def download_all_pages(domain_key,cc_index,num_jobs=2,unzip=False,url_filter=is_mime_html,params={'output':'json'}):
+def download_pages(domain_key,cc_index,unzip,num_jobs=2,url_filter=is_mime_html,params={'output':'json'}):
     pages = get_pages(domain_key,cc_index,url_filter=is_mime_html,params={'output':'json'})
-    unzipped_responses = download_page_data(pages,num_jobs)
+    unzipped_responses = get_documents(pages,num_jobs)
     if not unzip:
         return unzipped_responses
     return unzip_pages(unzipped_responses)
