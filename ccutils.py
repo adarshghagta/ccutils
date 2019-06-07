@@ -52,13 +52,13 @@ def get_page_from_cc(filename,offset,offset_end):
         return resp
 
 
-# In[308]:
+# In[370]:
 
 
 def unzip_page(response):
     raw_data = BytesIO(response.content)
     f = gzip.GzipFile(fileobj=raw_data)
-    warc, response = data.strip().decode().split('\r\n\r\n', 1)
+    warc, response = f.read().strip().decode().split('\r\n\r\n', 1)
     return {'warc':warc,'response':response}
 
 
@@ -84,17 +84,17 @@ def get_documents(pages,num_jobs):
     return responses
 
 
-# In[267]:
+# In[366]:
 
 
-def unzip_pages(responses):
+def unzip_pages(page_response_map):
     output = {}
     for each in responses:
         output[each['url']] = unzip_page(each['response'])
     return output
 
 
-# In[346]:
+# In[365]:
 
 
 def download_pages(domain_key,cc_index,unzip,num_jobs=2,url_filter=is_mime_html,params={'output':'json'}):
