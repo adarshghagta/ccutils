@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[327]:
+# In[1]:
 
 
 import gzip
@@ -14,7 +14,7 @@ import multiprocessing as mp
 import http.client
 
 
-# In[250]:
+# In[2]:
 
 
 def is_mime_html(page):
@@ -24,7 +24,7 @@ def is_mime_html(page):
     ])
 
 
-# In[253]:
+# In[3]:
 
 
 def get_pages(domain_key,cc_index,url_filter=is_mime_html,params={'output':'json'}):
@@ -38,7 +38,7 @@ def get_pages(domain_key,cc_index,url_filter=is_mime_html,params={'output':'json
     return pages
 
 
-# In[196]:
+# In[4]:
 
 
 def get_page_from_cc(filename,offset,offset_end):
@@ -52,17 +52,17 @@ def get_page_from_cc(filename,offset,offset_end):
         return resp
 
 
-# In[370]:
+# In[36]:
 
 
 def unzip_page(response):
     raw_data = BytesIO(response.content)
     f = gzip.GzipFile(fileobj=raw_data)
-    warc, response = f.read().strip().decode().split('\r\n\r\n', 1)
+    warc, response = f.read().decode("utf-8",errors='ignore').strip().split('\r\n\r\n', 1)
     return {'warc':warc,'response':response}
 
 
-# In[231]:
+# In[6]:
 
 
 def process_page_links(page):
@@ -75,7 +75,7 @@ def process_page_links(page):
     }
 
 
-# In[341]:
+# In[7]:
 
 
 def get_documents(pages,num_jobs):
@@ -84,17 +84,17 @@ def get_documents(pages,num_jobs):
     return responses
 
 
-# In[366]:
+# In[38]:
 
 
-def unzip_pages(page_response_map):
+def unzip_pages(responses):
     output = {}
     for each in responses:
         output[each['url']] = unzip_page(each['response'])
     return output
 
 
-# In[365]:
+# In[9]:
 
 
 def download_pages(domain_key,cc_index,unzip,num_jobs=2,url_filter=is_mime_html,params={'output':'json'}):
