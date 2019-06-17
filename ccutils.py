@@ -84,13 +84,16 @@ def get_documents(pages,num_jobs):
     return responses
 
 
-# In[38]:
+# In[1]:
 
 
 def unzip_pages(responses):
     output = {}
     for each in responses:
-        output[each['url']] = unzip_page(each['response'])
+        try:
+            output[each['url']] = unzip_page(each['response'])
+        except:
+            output[each['url']] = None
     return output
 
 
